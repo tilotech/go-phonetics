@@ -16,7 +16,7 @@ func EncodeMetaphone(word string) string {
 		return ""
 	}
 	word = strings.ToUpper(word)
-	word = removeDuplicates(word)
+	word = removeDuplicatesMetaphone(word)
 	wordLen := len(word)
 	if wordLen > 1 {
 		switch word[0:2] {
@@ -168,7 +168,7 @@ func isVowel(char string) bool {
 	return strings.Contains("AEIOU", char)
 }
 
-func removeDuplicates(word string) string {
+func removeDuplicatesMetaphone(word string) string {
 	previousChar := []rune(word)[0]
 	var result strings.Builder
 	result.WriteRune(previousChar)
