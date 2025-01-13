@@ -15,33 +15,36 @@ func EncodeSoundex(word string) string {
 		return "0000"
 	}
 	input := strings.ToLower(word)
-	result := strings.ToUpper(input[0:1])
-	code := ""
-	lastCode := ""
+	var result strings.Builder
+	result.WriteString(strings.ToUpper(input[0:1]))
+	var code, lastCode byte
 	for _, rune := range input[1:] {
 		switch rune {
 		case 'b', 'f', 'p', 'v':
-			code = "1"
+			code = '1'
 		case 'c', 'g', 'j', 'k', 'q', 's', 'x', 'z':
-			code = "2"
+			code = '2'
 		case 'd', 't':
-			code = "3"
+			code = '3'
 		case 'l':
-			code = "4"
+			code = '4'
 		case 'm', 'n':
-			code = "5"
+			code = '5'
 		case 'r':
-			code = "6"
+			code = '6'
 		}
 		if lastCode != code {
-			lastCode = code
-			result = result + lastCode
-			if len(result) == 4 {
+			result.WriteByte(code)
+			if result.Len() == 4 {
 				break
 			}
+			lastCode = code
 		}
 	}
-	return result + strings.Repeat("0", 4-len(result))
+	if result.Len() < 4 {
+		result.WriteString(strings.Repeat("0", 4-result.Len()))
+	}
+	return result.String()
 }
 
 // DifferenceSoundex is a function to calculate difference between two strings with Soundex algorithm.
@@ -61,18 +64,18 @@ func differenceSoundex(word1, word2 string) int {
 		return 100
 	}
 	result := 0
-	if strings.Index(soundex2, soundex1[1:]) > -1 {
+	if strings.Contains(soundex2, soundex1[1:]) {
 		result = 3
-	} else if strings.Index(soundex2, soundex1[2:]) > -1 || strings.Index(soundex2, soundex1[1:3]) > -1 {
+	} else if strings.Contains(soundex2, soundex1[2:]) || strings.Contains(soundex2, soundex1[1:3]) {
 		result = 2
 	} else {
-		if strings.Index(soundex2, soundex1[1:2]) > -1 {
+		if strings.Contains(soundex2, soundex1[1:2]) {
 			result = result + 1
 		}
-		if strings.Index(soundex2, soundex1[2:3]) > -1 {
+		if strings.Contains(soundex2, soundex1[2:3]) {
 			result = result + 1
 		}
-		if strings.Index(soundex2, soundex1[3:4]) > -1 {
+		if strings.Contains(soundex2, soundex1[3:4]) {
 			result = result + 1
 		}
 	}

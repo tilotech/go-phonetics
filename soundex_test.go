@@ -2,12 +2,16 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-package phonetics
+package phonetics_test
 
-import "testing"
+import (
+	"testing"
+
+	"github.com/tilotech/go-phonetics"
+)
 
 func TestSoundexEmptyString(t *testing.T) {
-	if EncodeSoundex("") != "0000" {
+	if phonetics.EncodeSoundex("") != "0000" {
 		t.Errorf("Encode with empty string should return 0000")
 	}
 }
@@ -29,13 +33,19 @@ func TestSoundexDifference(t *testing.T) {
 }
 
 func assertSoundexDifference(t *testing.T, word1 string, word2 string, rank int) {
-	if DifferenceSoundex(word1, word2) != rank {
-		t.Errorf("difference doesn't match target. Input: (%s, %s), Result: %d, Target: %d", word1, word2, DifferenceSoundex(word1, word2), rank)
+	if phonetics.DifferenceSoundex(word1, word2) != rank {
+		t.Errorf("difference doesn't match target. Input: (%s, %s), Result: %d, Target: %d", word1, word2, phonetics.DifferenceSoundex(word1, word2), rank)
 	}
 }
 
 func assertSoundexEquals(t *testing.T, source string, target string) {
-	if EncodeSoundex(source) != target {
-		t.Errorf("source doesn't match target. Input: %s, Result: %s, Target: %s", source, EncodeSoundex(source), target)
+	if phonetics.EncodeSoundex(source) != target {
+		t.Errorf("source doesn't match target. Input: %s, Result: %s, Target: %s", source, phonetics.EncodeSoundex(source), target)
+	}
+}
+
+func BenchmarkEncodeSoundex(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		phonetics.EncodeSoundex("Cammmppppbbbeeelll")
 	}
 }

@@ -30,35 +30,35 @@ func EncodeMetaphone(word string) string {
 		}
 	}
 
-	result := ""
+	var result strings.Builder
 	for i, rune := range word {
 		switch rune {
 		case 'B':
 			{
 				if i != wordLen-1 || safeSubString(word, i-1, 2) != "MB" {
-					result = result + "B"
+					result.WriteByte('B')
 				}
 			}
 		case 'C':
 			{
 				if safeSubString(word, i, 3) == "CIA" || safeSubString(word, i, 2) == "CH" {
-					result = result + "X"
+					result.WriteByte('X')
 				} else if safeSubString(word, i, 2) == "CI" || safeSubString(word, i, 2) == "CE" || safeSubString(word, i, 2) == "CY" {
-					result = result + "S"
+					result.WriteByte('S')
 				} else if safeSubString(word, i-1, 3) != "SCI" || safeSubString(word, i-1, 3) != "SCE" || safeSubString(word, i-1, 3) != "SCY" {
-					result = result + "K"
+					result.WriteByte('K')
 				}
 			}
 		case 'D':
 			{
 				if safeSubString(word, i, 3) == "DGE" || safeSubString(word, i, 3) == "DGY" || safeSubString(word, i, 3) == "DGI" {
-					result = result + "J"
+					result.WriteByte('J')
 				} else {
-					result = result + "T"
+					result.WriteByte('T')
 				}
 			}
 		case 'F':
-			result = result + "F"
+			result.WriteByte('F')
 		case 'G':
 			{
 				prev := safeSubString(word, i+1, 1)
@@ -69,9 +69,9 @@ func EncodeMetaphone(word string) string {
 					safeSubString(word, i, 3) == "GDY" ||
 					safeSubString(word, i, 3) == "GDI" {
 				} else if prev == "I" || prev == "E" || prev == "Y" {
-					result = result + "J"
+					result.WriteByte('J')
 				} else {
-					result = result + "K"
+					result.WriteByte('K')
 				}
 			}
 		case 'H':
@@ -82,74 +82,74 @@ func EncodeMetaphone(word string) string {
 					safeSubString(word, i-2, 2) != "PH" &&
 					safeSubString(word, i-2, 2) != "TH" &&
 					safeSubString(word, i-2, 2) != "GH" {
-					result = result + "H"
+					result.WriteByte('H')
 				}
 			}
 		case 'J':
-			result = result + "J"
+			result.WriteByte('J')
 		case 'K':
 			{
 				if safeSubString(word, i-1, 1) != "C" {
-					result = result + "K"
+					result.WriteByte('K')
 				}
 			}
 		case 'L':
-			result = result + "L"
+			result.WriteByte('L')
 		case 'M':
-			result = result + "M"
+			result.WriteByte('M')
 		case 'N':
-			result = result + "N"
+			result.WriteByte('N')
 		case 'P':
 			{
 				if safeSubString(word, i+1, 1) == "H" {
-					result = result + "F"
+					result.WriteByte('F')
 				} else {
-					result = result + "P"
+					result.WriteByte('P')
 				}
 			}
 		case 'Q':
-			result = result + "K"
+			result.WriteByte('K')
 		case 'R':
-			result = result + "R"
+			result.WriteByte('R')
 		case 'S':
 			{
 				if safeSubString(word, i+1, 1) == "H" || safeSubString(word, i, 3) == "SIO" || safeSubString(word, i, 3) == "SIA" {
-					result = result + "X"
+					result.WriteByte('X')
 				} else {
-					result = result + "S"
+					result.WriteByte('S')
 				}
 			}
 		case 'T':
 			{
 				if safeSubString(word, i, 3) == "TIO" || safeSubString(word, i, 3) == "TIA" {
-					result = result + "X"
+					result.WriteByte('X')
 				} else if safeSubString(word, i+1, 1) == "H" {
-					result = result + "0"
+					result.WriteByte('0')
 				} else if safeSubString(word, i, 3) != "TCH" {
-					result = result + "T"
+					result.WriteByte('T')
 				}
 			}
 		case 'V':
-			result = result + "F"
+			result.WriteByte('F')
 		case 'W':
 			{
 				if isVowel(safeSubString(word, i+1, 1)) {
-					result = result + "W"
+					result.WriteByte('W')
 				}
 			}
 		case 'X':
-			result = result + "KS"
+			result.WriteString("KS")
 		case 'Y':
 			{
 				if isVowel(safeSubString(word, i+1, 1)) {
-					result = result + "Y"
+					result.WriteByte('Y')
 				}
 			}
 		case 'Z':
-			result = result + "S"
+			result.WriteByte('S')
 		}
 	}
-	return result
+	return result.String()
 }
 
 func safeSubString(word string, start, count int) string {
@@ -165,17 +165,18 @@ func safeSubString(word string, start, count int) string {
 }
 
 func isVowel(char string) bool {
-	return strings.Index("AEIOU", char) > -1
+	return strings.Contains("AEIOU", char)
 }
 
 func removeDuplicates(word string) string {
 	previousChar := []rune(word)[0]
-	result := string(previousChar)
+	var result strings.Builder
+	result.WriteRune(previousChar)
 	for _, rune := range word[1:] {
 		if rune != previousChar || rune == 'C' {
-			result = result + string(rune)
+			result.WriteRune(rune)
 		}
 		previousChar = rune
 	}
-	return result
+	return result.String()
 }

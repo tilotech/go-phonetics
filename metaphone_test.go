@@ -2,12 +2,16 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-package phonetics
+package phonetics_test
 
-import "testing"
+import (
+	"testing"
+
+	"github.com/tilotech/go-phonetics"
+)
 
 func TestMetaphoneEmptyString(t *testing.T) {
-	if EncodeMetaphone("") != "" {
+	if phonetics.EncodeMetaphone("") != "" {
 		t.Errorf("Encode with empty string should return empty string")
 	}
 }
@@ -25,7 +29,13 @@ func TestMetaphoneEncode(t *testing.T) {
 }
 
 func assertMetaphoneEquals(t *testing.T, source string, target string) {
-	if EncodeMetaphone(source) != target {
-		t.Errorf("source doesn't match target. Input: %s, Result: %s, Target: %s", source, EncodeMetaphone(source), target)
+	if phonetics.EncodeMetaphone(source) != target {
+		t.Errorf("source doesn't match target. Input: %s, Result: %s, Target: %s", source, phonetics.EncodeMetaphone(source), target)
+	}
+}
+
+func BenchmarkEncodeMetaphone(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		phonetics.EncodeMetaphone("Cammmppppbbbeeelll")
 	}
 }
